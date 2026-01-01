@@ -1,9 +1,20 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/assets/" />
+  <Folder Name="/assets/opencv/">
+    <File Path="assets/opencv/cards.png" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/AIVisionBox.App.Console/AIVisionBox.App.Console.csproj" />
     <Project Path="src/AIVisionBox.Core/AIVisionBox.Core.csproj" />
     <Project Path="src/AIVisionBox.Engine.HttpClient/AIVisionBox.Engine.HttpClient.csproj" />
     <Project Path="src/AIVisionBox.Mock.InferenceServer/AIVisionBox.Mock.InferenceServer.csproj" />
+    <Project Path="src/AIVisionBox.Native.OpenCv.SmokeTest/AIVisionBox.Native.OpenCv.SmokeTest.vcxproj" Id="048049ba-e686-4dc4-8973-d87ffddb6aa0" />
+    <Project Path="src/AIVisionBox.Native.OpenCv/AIVisionBox.Native.OpenCv.vcxproj" Id="15943ef4-351b-4523-978a-792265a5ba8b" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/AIVisionBox.Core.Tests/AIVisionBox.Core.Tests.csproj" />
