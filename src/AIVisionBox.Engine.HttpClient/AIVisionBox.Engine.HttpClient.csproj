@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  
+    <Authors>mono-tec</Authors>
+    <Company>mono-tec</Company>
+    <Copyright>© 2026 mono-tec</Copyright>
+    <RepositoryUrl>https://github.com/mono-tec/AIVisionBox</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AIVisionBox.Core\AIVisionBox.Core.csproj" />
+  </ItemGroup>
+
+</Project>

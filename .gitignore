@@ -1,0 +1,93 @@
+# =========================================
+# AIVisionBox - .gitignore
+# Visual Studio / .NET / C++ / OpenCV
+# =========================================
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Visual Studio ---
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userprefs
+*.vscode/
+
+# --- Build outputs ---
+bin/
+obj/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+Debug/
+Release/
+
+# --- .NET ---
+*.dll
+*.exe
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+
+# --- NuGet ---
+*.nupkg
+packages/
+.nuget/
+.nuget/packages/
+
+# --- Test results ---
+TestResults/
+coverage/
+coverage.*.xml
+
+# --- Logs ---
+*.log
+
+# --- C++ / CLI ---
+*.ipch
+*.tlog
+*.ilk
+*.exp
+*.lib
+*.obj
+*.pch
+*.db
+*.opendb
+*.idb
+
+# --- CMake / vcpkg ---
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+vcpkg_installed/
+.vcpkg-root
+
+# --- OpenCV runtime (if copied locally) ---
+opencv/
+opencv-build/
+opencv-install/
+
+# --- Python (if notebooks/tools added later) ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# --- Environment / secrets ---
+.env
+.env.*
+secrets.json
+appsettings.*.json
+
+# --- Temporary files ---
+*.tmp
+*.temp
+*.bak
+*.swp

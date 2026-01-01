@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 契約層（Core）。クロスプラットフォーム前提なので netstandard2.1 を採用 -->
+    <TargetFramework>netstandard2.1</TargetFramework>
+
+    <!-- C# 8 を明示。init/record など(C#9+)は Core では使わない方針 -->
+    <LangVersion>8.0</LangVersion>
+
+    <!-- 契約層なので null 事故を減らす（最初は警告が増えるなら disable でもOK） -->
+    <Nullable>enable</Nullable>
+
+    <!-- XMLコメントを生成して、最小資料として使えるようにする -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- 公開前提なら Warning をエラー化して品質を上げる（最初は外してOK） -->
+    <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
+
+    <Authors>mono-tec</Authors>
+    <Company>mono-tec</Company>
+    <Copyright>© 2026 mono-tec</Copyright>
+    <RepositoryUrl>https://github.com/mono-tec/AIVisionBox</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

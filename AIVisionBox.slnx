@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AIVisionBox.App.Console/AIVisionBox.App.Console.csproj" />
+    <Project Path="src/AIVisionBox.Core/AIVisionBox.Core.csproj" />
+    <Project Path="src/AIVisionBox.Engine.HttpClient/AIVisionBox.Engine.HttpClient.csproj" />
+    <Project Path="src/AIVisionBox.Mock.InferenceServer/AIVisionBox.Mock.InferenceServer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AIVisionBox.Core.Tests/AIVisionBox.Core.Tests.csproj" />
+    <Project Path="tests/AIVisionBox.Engine.HttpClient.Tests/AIVisionBox.Engine.HttpClient.Tests.csproj" />
+    <Project Path="tests/AIVisionBox.Mock.InferenceServer.Tests/AIVisionBox.Mock.InferenceServer.Tests.csproj" />
+  </Folder>
+  <Folder Name="/ソリューション項目/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>

@@ -1,0 +1,6 @@
+@AIVisionBox.Mock.InferenceServer_HostAddress = http://localhost:5084
+
+GET {{AIVisionBox.Mock.InferenceServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
