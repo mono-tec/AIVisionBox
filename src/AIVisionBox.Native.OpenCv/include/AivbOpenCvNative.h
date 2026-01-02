@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 /*
  * AIVisionBox.Native.OpenCv
  *
@@ -52,29 +52,29 @@ extern "C" {
 #endif
 
     /**
-     * @brief Native DLL ‚Ì¶‘¶Šm”FE‘a’ÊŠm”F—p API
+     * @brief Native DLL ã®ç”Ÿå­˜ç¢ºèªãƒ»ç–é€šç¢ºèªç”¨ API
      *
-     * OpenCV ‚ª³‚µ‚­ƒŠƒ“ƒN‚³‚êADLL ‚ª“®ì‚µ‚Ä‚¢‚é‚©‚ğ
-     * Šm”F‚·‚é‚½‚ß‚ÌŠÈˆÕŠÖ”B
+     * OpenCV ãŒæ­£ã—ããƒªãƒ³ã‚¯ã•ã‚Œã€DLL ãŒå‹•ä½œã—ã¦ã„ã‚‹ã‹ã‚’
+     * ç¢ºèªã™ã‚‹ãŸã‚ã®ç°¡æ˜“é–¢æ•°ã€‚
      *
      * @return AivbCountResult
-     *         - errorCode == 0 : ³í
+     *         - errorCode == 0 : æ­£å¸¸
      */
     AIVB_API AivbCountResult Aivb_Ping(void);
 
     /**
-     * @brief BGR24 ‰æ‘œ‚©‚çƒgƒ‰ƒ“ƒviƒ_ƒCƒ„j‚ÌŒÂ”‚ğƒJƒEƒ“ƒg‚·‚é
+     * @brief BGR24 ç”»åƒã‹ã‚‰ãƒˆãƒ©ãƒ³ãƒ—ï¼ˆãƒ€ã‚¤ãƒ¤ï¼‰ã®å€‹æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
      *
-     * OpenCV ‚É‚æ‚é‰æ‘œˆ—‚ğs‚¢Aw’è ROI “à‚Ì
-     * ƒ_ƒCƒ„ƒ}[ƒN‚ğŒŸoEŒÂ”ƒJƒEƒ“ƒg‚·‚éB
+     * OpenCV ã«ã‚ˆã‚‹ç”»åƒå‡¦ç†ã‚’è¡Œã„ã€æŒ‡å®š ROI å†…ã®
+     * ãƒ€ã‚¤ãƒ¤ãƒãƒ¼ã‚¯ã‚’æ¤œå‡ºãƒ»å€‹æ•°ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹ã€‚
      *
-     * @param bgr         BGR24 Œ`®‚Ì‰æ‘œƒoƒbƒtƒ@iæ“ªƒ|ƒCƒ“ƒ^j
-     * @param width       ‰æ‘œ•iƒsƒNƒZƒ‹j
-     * @param height      ‰æ‘œ‚‚³iƒsƒNƒZƒ‹j
-     * @param strideBytes 1 s‚ ‚½‚è‚ÌƒoƒCƒg”
-     * @param roi         ˆ—‘ÎÛ‚Ì ROIi‰æ‘œÀ•Wj
-     * @param minArea     ŒŸo‘ÎÛ‚ÌÅ¬–ÊÏ
-     * @param maxArea     ŒŸo‘ÎÛ‚ÌÅ‘å–ÊÏ
+     * @param bgr         BGR24 å½¢å¼ã®ç”»åƒãƒãƒƒãƒ•ã‚¡ï¼ˆå…ˆé ­ãƒã‚¤ãƒ³ã‚¿ï¼‰
+     * @param width       ç”»åƒå¹…ï¼ˆãƒ”ã‚¯ã‚»ãƒ«ï¼‰
+     * @param height      ç”»åƒé«˜ã•ï¼ˆãƒ”ã‚¯ã‚»ãƒ«ï¼‰
+     * @param strideBytes 1 è¡Œã‚ãŸã‚Šã®ãƒã‚¤ãƒˆæ•°
+     * @param roi         å‡¦ç†å¯¾è±¡ã® ROIï¼ˆç”»åƒåº§æ¨™ï¼‰
+     * @param minArea     æ¤œå‡ºå¯¾è±¡ã®æœ€å°é¢ç©
+     * @param maxArea     æ¤œå‡ºå¯¾è±¡ã®æœ€å¤§é¢ç©
      *
      * @return AivbCountResult
      */
@@ -87,6 +87,10 @@ extern "C" {
         int minArea,
         int maxArea
     );
+
+    // â˜…ä»Šå›è¿½åŠ 
+    AIVB_API int Aivb_OpenCv_DefaultMinArea();
+    AIVB_API int Aivb_OpenCv_DefaultMaxArea();
 
 #ifdef __cplusplus
 } // extern "C"

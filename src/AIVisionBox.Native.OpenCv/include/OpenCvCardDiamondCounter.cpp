@@ -1,80 +1,132 @@
+ï»¿#include "AivbOpenCvNative.h"
 #include "OpenCvCardDiamondCounter.h"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 
-static cv::Rect ToCvRect(AivbRoiRect roi, int width, int height)
+
+static cv::Rect ClampRoi(const AivbRoiRect& roi, int width, int height)
 {
+    if (roi.w <= 0 || roi.h <= 0) return cv::Rect(0, 0, width, height);
+
     int x = std::max(0, roi.x);
     int y = std::max(0, roi.y);
     int w = std::max(0, roi.w);
     int h = std::max(0, roi.h);
-    if (w == 0 || h == 0) return cv::Rect(0, 0, width, height);
 
-    // clamp
-    if (x + w > width)  w = width - x;
-    if (y + h > height) h = height - y;
-    if (w <= 0 || h <= 0) return cv::Rect(0, 0, width, height);
+    if (x >= width || y >= height) return cv::Rect(0, 0, width, height);
 
-    return cv::Rect(x, y, w, h);
+    int x2 = std::min(width, x + w);
+    int y2 = std::min(height, y + h);
+
+    if (x2 <= x || y2 <= y) return cv::Rect(0, 0, width, height);
+
+    return cv::Rect(x, y, x2 - x, y2 - y);
 }
 
 AivbCountResult OpenCvCardDiamondCounter::CountBgr24(
     const unsigned char* bgr,
-    int width, int height, int strideBytes,
+    int width,
+    int height,
+    int strideBytes,
     AivbRoiRect roi,
-    int minArea, int maxArea)
+    int minArea,
+    int maxArea)
 {
     AivbCountResult r{};
     r.isOk = 0;
     r.objectCount = 0;
     r.errorCode = 0;
 
-    if (!bgr || width <= 0 || height <= 0 || strideBytes < width * 3) {
+    // --- validation
+    if (!bgr || width <= 0 || height <= 0 || strideBytes < width * 3)
+    {
         r.errorCode = 1; // invalid args
         return r;
     }
+    if (minArea <= 0) minArea = 50;
+    if (maxArea <= 0) maxArea = 5000;
 
-    // 1) Mat‰»iBGRj
-    cv::Mat src(height, width, CV_8UC3, const_cast<unsigned char*>(bgr), strideBytes);
+    try
+    {
+        // 1) Wrap input (BGR, 8UC3)
+        cv::Mat src(height, width, CV_8UC3, const_cast<unsigned char*>(bgr), (size_t)strideBytes);
 
-    // 2) ROI
-    cv::Rect rc = ToCvRect(roi, width, height);
-    cv::Mat roiMat = src(rc).clone(); // clone‚Å˜A‘±‰»•ˆÀ‘S‰»
+        // 2) ROI crop
+        cv::Rect rect = ClampRoi(roi, width, height);
+        cv::Mat roiMat = src(rect).clone(); // cloneã—ã¦ãŠãã¨å¾Œå‡¦ç†ãŒå®‰å…¨
 
-    // 3) HSV•ÏŠ·
-    cv::Mat hsv;
-    cv::cvtColor(roiMat, hsv, cv::COLOR_BGR2HSV);
+        // 3) HSV ã¸
+        cv::Mat hsv;
+        cv::cvtColor(roiMat, hsv, cv::COLOR_BGR2HSV);
 
-    // 4) ÔF’ŠoiÔ‚Í 0•t‹ß ‚Æ 180•t‹ß‚É•ª‚©‚ê‚éj
-    cv::Mat mask1, mask2, mask;
-    // ¦è‡’l‚ÍŒã‚Å’²®B‚Ü‚¸“®‚­’lB
-    cv::inRange(hsv, cv::Scalar(0, 70, 50), cv::Scalar(10, 255, 255), mask1);
-    cv::inRange(hsv, cv::Scalar(170, 70, 50), cv::Scalar(180, 255, 255), mask2);
-    mask = mask1 | mask2;
+        // 4) èµ¤æŠ½å‡ºï¼ˆHSVã¯èµ¤ãŒ0ä»˜è¿‘ã¨180ä»˜è¿‘ã«åˆ†ã‹ã‚Œã‚‹ã®ã§2ãƒ¬ãƒ³ã‚¸ï¼‰
+        cv::Mat mask1, mask2, mask;
+        // ã“ã“ã¯èª¿æ•´ãƒã‚¤ãƒ³ãƒˆï¼šcards.pngæƒ³å®šã®"èµ¤"
+        cv::inRange(hsv, cv::Scalar(0, 80, 80), cv::Scalar(10, 255, 255), mask1);
+        cv::inRange(hsv, cv::Scalar(170, 80, 80), cv::Scalar(180, 255, 255), mask2);
+        mask = mask1 | mask2;
 
-    // 5) ƒmƒCƒYœ‹iŒy‚­j
-    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
-    cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel, cv::Point(-1, -1), 1);
-    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel, cv::Point(-1, -1), 1);
+        int nz = cv::countNonZero(mask);
+        std::cout << "[dbg] mask nonzero=" << nz << " / (w*h=" << mask.cols * mask.rows << ")\n";
 
-    // 6) —ÖŠs’Šo
-    std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        // 5) ãƒã‚¤ã‚ºé™¤å»ï¼ˆé–‹é–‰ï¼‰
+        //cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+        //cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernel, cv::Point(-1, -1), 1);
+        //cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernel, cv::Point(-1, -1), 1);
+        
+        // NOTE: cards.png ã§ã¯ã€Œèµ¤ã„é ˜åŸŸãŒåˆ†å‰²ã•ã‚Œã¦è¼ªéƒ­ãŒå¢—ãˆã‚„ã™ã„ã€ã®ã§ CLOSE ã‚’å¼·ã‚ã‚‹
+        cv::Mat kernelOpen = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+        cv::Mat kernelClose = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
 
-    // 7) –ÊÏƒtƒBƒ‹ƒ^
-    int count = 0;
-    if (minArea <= 0) minArea = 30; // “K“–‚ÈƒfƒtƒHƒ‹ƒg
-    if (maxArea <= 0) maxArea = 1000000;
+        // å°ãƒã‚¤ã‚ºé™¤å»ï¼ˆOPENï¼‰
+        cv::morphologyEx(mask, mask, cv::MORPH_OPEN, kernelOpen, cv::Point(-1, -1), 1);
 
-    for (const auto& c : contours) {
-        double a = cv::contourArea(c);
-        if (a >= minArea && a <= maxArea) {
+        // åˆ†å‰²ã•ã‚ŒãŸèµ¤é ˜åŸŸã‚’çµåˆï¼ˆCLOSEã‚’å¼·ã‚ã‚‹ï¼‰
+        cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, kernelClose, cv::Point(-1, -1), 2);
+
+        // (4) debug: maskä¿å­˜
+        cv::imwrite("debug_mask.png", mask);
+
+        // 6) è¼ªéƒ­æŠ½å‡º
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        // (4) debug: contoursä¿å­˜
+        cv::Mat vis;
+        cv::cvtColor(mask, vis, cv::COLOR_GRAY2BGR);
+        cv::drawContours(vis, contours, -1, cv::Scalar(0, 255, 0), 2);
+        cv::imwrite("debug_contours.png", vis);
+
+        int count = 0;
+        for (const auto& c : contours)
+        {
+            double area = cv::contourArea(c);
+            if (area < minArea) continue;
+            if (area > maxArea) continue;
             count++;
         }
-    }
 
-    r.isOk = 1;
-    r.objectCount = count;
-    r.errorCode = 0;
-    return r;
+        std::cout << "[dbg] contours=" << contours.size() << "\n";
+
+        double minA = 1e18, maxA = 0;
+        for (auto& c : contours) {
+            double a = cv::contourArea(c);
+            minA = std::min(minA, a);
+            maxA = std::max(maxA, a);
+        }
+        if (!contours.empty())
+            std::cout << "[dbg] area range: " << minA << " .. " << maxA
+            << " (filter " << minArea << " .. " << maxArea << ")\n";
+
+        r.isOk = 1;
+        r.objectCount = count;
+        r.errorCode = 0;
+        return r;
+    }
+    catch (...)
+    {
+        r.errorCode = 2; // processing error
+        return r;
+    }
 }

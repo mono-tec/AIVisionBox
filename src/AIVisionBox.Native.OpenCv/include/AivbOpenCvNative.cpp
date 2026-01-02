@@ -1,5 +1,4 @@
-#define AIVB_OPENCV_NATIVE_EXPORTS
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "AivbOpenCvNative.h"
 #include "OpenCvCardDiamondCounter.h"
 #include <opencv2/core.hpp>
@@ -21,7 +20,9 @@ AivbCountResult Aivb_CountDiamonds_Bgr24(
     AivbCountResult r{};
     r.isOk = 0;
     r.objectCount = 0;
+    r.errorCode = 0; // â˜…æ˜ç¤º
 
+    // --- å¼•æ•°ãƒã‚§ãƒƒã‚¯ï¼ˆã‚ãªãŸã®æ–¹é‡ã§OKï¼‰
     if (!bgr) { r.errorCode = 1; return r; }
     if (width <= 0 || height <= 0) { r.errorCode = 1; return r; }
     if (strideBytes < width * 3) { r.errorCode = 1; return r; }
@@ -30,9 +31,24 @@ AivbCountResult Aivb_CountDiamonds_Bgr24(
     if (roi.x + roi.w > width || roi.y + roi.h > height) { r.errorCode = 1; return r; }
     if (minArea < 0 || maxArea < 0 || minArea > maxArea) { r.errorCode = 1; return r; }
 
-    // ‚±‚±‚©‚çæ‚É OpenCV ˆ—
-    // ¬Œ÷‚Í r.isOk=1, r.errorCode=0 ‚È‚Ç
-    // ¸”s‚Í r.errorCode=2 ‚È‚Ç
+    // â˜…ã“ã“ãŒæœ¬ä½“ï¼šOpenCVå‡¦ç†ã«å§”è­²ã—ã¦ã€ãã®çµæœã‚’ãã®ã¾ã¾è¿”ã™
+    return OpenCvCardDiamondCounter::CountBgr24(
+        bgr, width, height, strideBytes,
+        roi, minArea, maxArea
+    );
+}
 
-    return r;
+
+extern "C" {
+
+    AIVB_API int Aivb_OpenCv_DefaultMinArea()
+    {
+        return OpenCvCardDiamondCounter::DefaultMinArea;
+    }
+
+    AIVB_API int Aivb_OpenCv_DefaultMaxArea()
+    {
+        return OpenCvCardDiamondCounter::DefaultMaxArea;
+    }
+
 }

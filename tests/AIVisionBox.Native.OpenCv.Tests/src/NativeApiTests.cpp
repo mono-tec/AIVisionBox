@@ -1,8 +1,8 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include <gtest/gtest.h>
 #include "AivbOpenCvNative.h"
 
-// A: APIŒ_–ñƒeƒXƒgi“ü—Í‚ª•Ï‚Å‚à—‚¿‚¸‚É–ß‚é‚±‚Æ‚ğ•ÛØj
+// A: APIå¥‘ç´„ãƒ†ã‚¹ãƒˆï¼ˆå…¥åŠ›ãŒå¤‰ã§ã‚‚è½ã¡ãšã«æˆ»ã‚‹ã“ã¨ã‚’ä¿è¨¼ï¼‰
 
 TEST(NativeOpenCv_ApiContract, Ping_ReturnsOk)
 {
@@ -63,14 +63,14 @@ TEST(NativeOpenCv_ApiContract, CountDiamonds_InvalidWidthHeight_ReturnsError)
 
 TEST(NativeOpenCv_ApiContract, CountDiamonds_InvalidStride_ReturnsError)
 {
-    // BGR24 ‚È‚çÅ¬ stride ‚Í width*3 ‚ªŠî–{
+    // BGR24 ãªã‚‰æœ€å° stride ã¯ width*3 ãŒåŸºæœ¬
     unsigned char dummy[300] = { 0 };
     AivbRoiRect roi{ 0, 0, 10, 10 };
 
     AivbCountResult r = Aivb_CountDiamonds_Bgr24(
         dummy,
         10, 10,
-        1, // –¾‚ç‚©‚É•s³
+        1, // æ˜ã‚‰ã‹ã«ä¸æ­£
         roi,
         10,
         1000
@@ -85,7 +85,7 @@ TEST(NativeOpenCv_ApiContract, CountDiamonds_InvalidAreaParams_ReturnsError)
     unsigned char dummy[300] = { 0 };
     AivbRoiRect roi{ 0, 0, 10, 10 };
 
-    // minArea > maxArea ‚Í•s³ˆµ‚¢‚ğ„§
+    // minArea > maxArea ã¯ä¸æ­£æ‰±ã„ã‚’æ¨å¥¨
     AivbCountResult r = Aivb_CountDiamonds_Bgr24(
         dummy,
         10, 10,
@@ -103,7 +103,7 @@ TEST(NativeOpenCv_ApiContract, CountDiamonds_RoiOutside_ReturnsError)
 {
     unsigned char dummy[300] = { 0 };
 
-    // ‰æ‘œ(10x10)‚É‘Î‚µ‚ÄŠ®‘S‚ÉŠO
+    // ç”»åƒ(10x10)ã«å¯¾ã—ã¦å®Œå…¨ã«å¤–
     AivbRoiRect roi{ 100, 100, 10, 10 };
 
     AivbCountResult r = Aivb_CountDiamonds_Bgr24(

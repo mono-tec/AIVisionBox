@@ -113,6 +113,15 @@
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\build\x64\vc16\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);opencv_world4120d.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)assets\opencv" mkdir "$(OutDir)assets\opencv"
+xcopy /E /I /Y /D "$(SolutionDir)assets\opencv\*" "$(OutDir)assets\opencv\"
+</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,9 +140,13 @@
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\build\x64\vc16\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);opencv_world4120.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /Y /D "$(SolutionDir)assets\opencv" "$(TargetDir)assets\opencv"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TestEnv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AIVisionBox.Native.OpenCv\AIVisionBox.Native.OpenCv.vcxproj">
@@ -142,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\TestEnv.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
