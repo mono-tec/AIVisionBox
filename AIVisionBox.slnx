@@ -20,6 +20,7 @@
     <Project Path="tests/AIVisionBox.Core.Tests/AIVisionBox.Core.Tests.csproj" />
     <Project Path="tests/AIVisionBox.Engine.HttpClient.Tests/AIVisionBox.Engine.HttpClient.Tests.csproj" />
     <Project Path="tests/AIVisionBox.Mock.InferenceServer.Tests/AIVisionBox.Mock.InferenceServer.Tests.csproj" />
+    <Project Path="tests/AIVisionBox.Native.OpenCv.Tests/AIVisionBox.Native.OpenCv.Tests.vcxproj" Id="81b25017-4d3f-401f-ac43-9ec079bd987c" />
   </Folder>
   <Folder Name="/ソリューション項目/">
     <File Path=".gitattributes" />

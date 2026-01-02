@@ -18,6 +18,21 @@ AivbCountResult Aivb_CountDiamonds_Bgr24(
     const unsigned char* bgr, int width, int height, int strideBytes,
     AivbRoiRect roi, int minArea, int maxArea)
 {
-    return OpenCvCardDiamondCounter::CountBgr24(
-        bgr, width, height, strideBytes, roi, minArea, maxArea);
+    AivbCountResult r{};
+    r.isOk = 0;
+    r.objectCount = 0;
+
+    if (!bgr) { r.errorCode = 1; return r; }
+    if (width <= 0 || height <= 0) { r.errorCode = 1; return r; }
+    if (strideBytes < width * 3) { r.errorCode = 1; return r; }
+    if (roi.w <= 0 || roi.h <= 0) { r.errorCode = 1; return r; }
+    if (roi.x < 0 || roi.y < 0) { r.errorCode = 1; return r; }
+    if (roi.x + roi.w > width || roi.y + roi.h > height) { r.errorCode = 1; return r; }
+    if (minArea < 0 || maxArea < 0 || minArea > maxArea) { r.errorCode = 1; return r; }
+
+    // ‚±‚±‚©‚çæ‚É OpenCV ˆ—
+    // ¬Œ÷‚Í r.isOk=1, r.errorCode=0 ‚È‚Ç
+    // ¸”s‚Í r.errorCode=2 ‚È‚Ç
+
+    return r;
 }
