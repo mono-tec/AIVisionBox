@@ -64,7 +64,7 @@ AivbCountResult OpenCvCardDiamondCounter::CountBgr24(
         cv::Mat mask1, mask2, mask;
         // ここは調整ポイント：cards.png想定の"赤"
         cv::inRange(hsv, cv::Scalar(0, 80, 80), cv::Scalar(10, 255, 255), mask1);
-        cv::inRange(hsv, cv::Scalar(170, 80, 80), cv::Scalar(180, 255, 255), mask2);
+        cv::inRange(hsv, cv::Scalar(168, 80, 80), cv::Scalar(179, 255, 255), mask2);
         mask = mask1 | mask2;
 
         int nz = cv::countNonZero(mask);

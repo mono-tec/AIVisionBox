@@ -24,6 +24,9 @@
 *.txt       text eol=lf
 *.http      text eol=lf
 
+# --- Jupyter / notebooks
+*.ipynb     text eol=lf
+
 # --- C++ / CLI (planned) ---
 *.cpp       text eol=lf
 *.c         text eol=lf

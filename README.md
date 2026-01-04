@@ -79,61 +79,8 @@ AIVisionBox
 
 ---
 
-## サンプルデータ（cards.png）の取得と配置
-
-OpenCV 公式サンプル画像 `cards.png` を使用します。
-
-- 取得箇所：`opencv` リポジトリ内のサンプルデータ  
-  - https://github.com/opencv/opencv/blob/4.x/samples/data/cards.png
-- 配置場所：本リポジトリの以下へ配置してください  
-  - `（リポジトリルート）\assets\opencv\cards.png`
-
-> ※ `AIVisionBox.Native.OpenCv.SmokeTest` およびテストで参照します。
-
----
-
-## 環境変数（開発環境セットアップ）
-
-本リポジトリでは、OpenCV の配置場所とサンプルデータ（画像）配置場所を環境変数で切り替えられる想定です。
-
-### OPENCV_DIR
-
-- 内容：ダウンロードした OpenCV の配置場所（ルートパス）
-- 想定構成（例）：
-
-```
-OPENCV_DIR
-├─ build
-├─ sources
-├─ LICENSE.txt
-├─ LICENSE_FFMPEG.txt
-└─ README.md.txt
-```
-
-> ※ OpenCV の入手方法やフォルダ名は環境により異なりますが、  
-> `build`（ビルド成果物）と `sources`（ソース）を同一ルート配下に置く形を想定しています。
-
-### AIVB_ASSETS_DIR
-
-- 内容：サンプルデータ（画像）の置き場（assets ルート）
-- 例：`（リポジトリルート）\assets`
-
-> 例：`AIVB_ASSETS_DIR\opencv\cards.png` が存在する状態にします。
-
----
-
-## 未完部分（v0.1.x の扱い）
-
-### cards.png のダイヤ個数カウント精度
-
-現状の OpenCV 実装は「HSV 赤抽出 + 形態学処理 + 輪郭面積フィルタ」による **簡易カウント**です。
-
-- v0.1.x の目的：  
-  **Native API 契約（DLL export / 呼び出し）・ビルド/配布・再現可能なパイプライン**の安定化
-- 精度（正解個数の一致）は v0.2 以降で調整予定です  
-  - HSV 閾値 / morphology / minArea/maxArea は `cards.png` と環境差により変動します
-
 ## ライセンス
+
 MIT © 2026 mono-tec
 
 ---
@@ -141,3 +88,44 @@ MIT © 2026 mono-tec
 ## 注意事項
 
 本プロジェクトは学習・検証用途を主目的としています。
+
+
+---
+
+## Notebook（Python での検証・チューニング）
+
+本リポジトリには、OpenCV の処理パイプラインを **Python / Jupyter Notebook で先に検証し**、  
+確度が取れた内容を C++ 実装へフィードバックするための Notebook を同梱します。
+
+- `notebooks/cards_diamond_practice.ipynb`  
+  - 画像の読み込み、BGR→RGB、ROI の考え方などの練習用
+- `notebooks/cards_diamond_tuning.ipynb`  
+  - HSV 赤抽出 → 形態学処理 → 輪郭 → 面積フィルタ（min/max area）までの一連のパイプラインを可視化し、
+    パラメータを調整するための Notebook
+
+> 方針：**Pythonで最適化 → C++へ反映**  
+> まず「見える化＋パラメータ探索」を Python で行い、C++ は最小で堅牢な実装に寄せます。
+
+### Notebook の実行前提
+
+- Python 3.10+（推奨）
+- `opencv-python`, `numpy`, `matplotlib`, `requests`（Notebook 内でインストール案内あり）
+
+---
+
+## サンプル画像 cards.png の扱い（リポジトリに含めない方針）
+
+`cards.png` は OpenCV 公式リポジトリのサンプルデータです。
+
+- 取得箇所：OpenCV リポジトリ内のサンプル画像  
+  - https://github.com/opencv/opencv/blob/4.x/samples/data/cards.png
+
+本リポジトリでは **cards.png を原則コミットしません**（著作権/ライセンス確認を簡単にするため）。  
+代わりに次のどちらかで利用します。
+
+1. **ローカルに配置して使う（C++ SmokeTest / Native テスト向け）**  
+   - 配置：`（リポジトリルート）\assets\opencv\cards.png`
+2. **Notebook が必要に応じてダウンロードして使う（Python 検証向け）**  
+   - Notebook 内の `ensure_cards_png()` がダウンロードを行います
+
+> ※ どちらの方式でも `AIVB_ASSETS_DIR` を設定して assets の基準パスを切り替え可能です。

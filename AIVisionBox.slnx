@@ -8,6 +8,11 @@
   <Folder Name="/assets/opencv/">
     <File Path="assets/opencv/cards.png" />
   </Folder>
+  <Folder Name="/notebooks/">
+    <File Path="notebooks/cards_diamond_practice.ipynb" />
+    <File Path="notebooks/cards_diamond_tuning.ipynb" />
+    <File Path="notebooks/README.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/AIVisionBox.App.Console/AIVisionBox.App.Console.csproj" />
     <Project Path="src/AIVisionBox.Core/AIVisionBox.Core.csproj" />
